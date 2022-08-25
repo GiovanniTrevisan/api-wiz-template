@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using Wiz.Template.Domain.Models;
-using Wiz.Template.Infra.Mappings;
 
 namespace Wiz.Template.Infra.Context
 {
@@ -11,13 +9,8 @@ namespace Wiz.Template.Infra.Context
         public EntityContext(DbContextOptions<EntityContext> options)
              : base(options) { }
 
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Address> Addresses { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new CustomerMap());
-            modelBuilder.ApplyConfiguration(new AddressMap());
         }
 
         public override int SaveChanges()

@@ -33,19 +33,13 @@ using System.Text.Json.Serialization;
 using Wiz.Template.API.Extensions;
 using Wiz.Template.API.Filters;
 using Wiz.Template.API.Middlewares;
-using Wiz.Template.API.Services;
-using Wiz.Template.API.Services.Interfaces;
 using Wiz.Template.API.Settings;
 using Wiz.Template.Domain.Interfaces.Identity;
 using Wiz.Template.Domain.Interfaces.Notifications;
-using Wiz.Template.Domain.Interfaces.Repository;
-using Wiz.Template.Domain.Interfaces.Services;
 using Wiz.Template.Domain.Interfaces.UoW;
 using Wiz.Template.Domain.Notifications;
 using Wiz.Template.Infra.Context;
 using Wiz.Template.Infra.Identity;
-using Wiz.Template.Infra.Repository;
-using Wiz.Template.Infra.Services;
 using Wiz.Template.Infra.UoW;
 
 namespace Wiz.Template.API;
@@ -258,19 +252,7 @@ public class Startup
 
     private void RegisterHttpClient(IServiceCollection services)
     {
-        services.AddHttpClient<IViaCEPService, ViaCEPService>((s, c) =>
-                    {
-                        c.BaseAddress = new Uri(Configuration["API:ViaCEP"]);
-                        c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    }).AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.OrResult(response =>
-                            (int)response.StatusCode == (int)HttpStatusCode.InternalServerError)
-                      .WaitAndRetryAsync(3, retry =>
-                           TimeSpan.FromSeconds(Math.Pow(2, retry)) +
-                           TimeSpan.FromMilliseconds(new Random(9876).Next(0, 100))))
-                      .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.CircuitBreakerAsync(
-                           handledEventsAllowedBeforeBreaking: 3,
-                           durationOfBreak: TimeSpan.FromSeconds(30)
-                    ));
+        
     }
 
     protected virtual void RegisterServices(IServiceCollection services)
@@ -278,7 +260,7 @@ public class Startup
         services.Configure<ApplicationInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
 
         #region Service
-        services.AddScoped<ICustomerService, CustomerService>();
+        //services.AddScoped<ICustomerService, CustomerService>();
 
         #endregion
 
@@ -292,8 +274,6 @@ public class Startup
 
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IIdentityService, IdentityService>();
 
         #endregion

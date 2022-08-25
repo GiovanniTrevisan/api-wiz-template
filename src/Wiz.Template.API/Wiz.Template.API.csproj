@@ -38,6 +38,12 @@
     <ProjectReference Include="..\Wiz.Template.Infra\Wiz.Template.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Services\Interfaces\" />
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
